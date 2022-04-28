@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!-- 타임리프 템플릿 페이지 
+     html 태그에 네임스페이스 표시
+     xml 문법을 준수 : 단독태그도 '/'로 닫는다.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta> <!-- 단독 태그도 '/'로 닫는다. -->
+<title>회원목록</title>
+</head>
+<body>
+	<h3> 회원목록 </h3>
+	<table>
+		<tr>
+			<th> 아이디 </th>
+			<th> 비밀번호 </th>
+			<th> 이름 </th>
+			<th> 생일 </th>
+			<th> 전화번호</th>
+			<th> 이메일</th>
+			<th> 등록일 </th>
+		</tr>
+		<tr th:each="vo:${list}">
+			<td><span th:text="${vo.id}"></span></td>
+			<td><span th:text="${vo.password}"></span></td>
+			<td><span th:text="${vo.name}"></span></td>
+			<td><span th:text="${vo.birthday}"></span></td>
+			<td><span th:text="${vo.hp}"></span></td>
+			<td><span th:text="${vo.email}"></span></td>
+			<td><span th:text="${vo.regDate}"></span></td>
+		</tr>
+	</table>
+</body>
+</html>

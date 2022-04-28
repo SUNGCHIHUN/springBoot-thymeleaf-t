@@ -1,0 +1,102 @@
+-- 시큐리티 반영안하는 버전으로 작업
+
+1. Table 생성
+   -- 시큐리티 반영(password 100으로 사이즈 조정, key, authority, enabled 컬럼3개추가)
+   DROP TABLE mvc_customer_tbl CASCADE constraints;
+   CREATE TABLE mvc_customer_tbl(
+       id        VARCHAR2(20) PRIMARY KEY,
+       password  VARCHAR2(100) NOT NULL,  -- 암호화된 비밀번호를 저장해야 하므로 사이즈 크게 
+       name      VARCHAR2(20) NOT NULL,   
+       birthday  DATE         NOT NULL,
+       address   VARCHAR2(50) NOT NULL,
+       hp        VARCHAR2(13),
+       email     VARCHAR2(50) NOT NULL,
+       regDate  TIMESTAMP DEFAULT sysdate,   -- 가입일
+       -- 시큐리티를 위한 추가
+       key      VARCHAR2(100), -- 이메일인증
+       authority VARCHAR2(30) DEFAULT 'ROLE_USER', -- 권한 : ROLE_USER:customer, ROLE_ADMIN:관리자
+       enabled   CHAR(1)    DEFAULT 0    -- 계정사용 가능여부(1:사용가능, 0:사용불가) : 이메일인증시 1로 update
+   );
+   
+   DESC mvc_customer_tbl;
+   
+      INSERT INTO mvc_customer_tbl(id, password, name, birthday, address, hp, email, regDate, key, authority, enabled)
+       VALUES('hong', '1234', '홍길동', '2010-01-01', '서울시 강남구', '010-1111-1111', 'sunrise555@naver.com', sysdate, 'aaaa', 'ROLE_USER', 1);
+       COMMIT;
+       
+   
+2. 플젝생성 
+    new > Spring Starter Project
+       플젝명, 패키지명 주의
+       
+   Boot Version : 최신버전 2.6.7
+   SQL : MySQL, JDBC, MyBatis 체크
+   Template Engines : Thymeleaf 체크
+   Web : Web 체크
+
+    
+3. pom.xml에서 자동으로 추가된 라이브러리 확인
+
+   <!-- 스프링 부트 플젝 생성시 선택한  dependencyes 정보가 자동으로 pom.xml로 들어온다.(5개 선택함)-->
+      <!-- 스프링부트 jdbc 라이브러리 -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-jdbc</artifactId>
+      </dependency>
+      
+      <!-- 타임리프 템플릿 관련 라이브러리 : View로 jsp를 선택했다면 타임리프 주석처리해야함, jsp와 타임리프 템플릿을 동시에 사용불가 -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-thymeleaf</artifactId>
+      </dependency>
+      
+      <!-- 필수 추가 : @RequestMapping, ModelAndView, Model.. 추가안하면 인식안됨 -->
+      <dependency>
+         <groupId>org.springframework.boot</groupId>
+         <artifactId>spring-boot-starter-web</artifactId>
+      </dependency>
+      
+      <!-- mybatis -->
+      <dependency>
+         <groupId>org.mybatis.spring.boot</groupId>
+         <artifactId>mybatis-spring-boot-starter</artifactId>
+         <version>2.2.2</version>
+      </dependency>
+
+      <!--오라클 -->
+      <dependency>
+         <groupId>com.oracle.database.jdbc</groupId>
+         <artifactId>ojdbc8</artifactId>
+         <scope>runtime</scope>
+      </dependency>
+      <!-- 자동으로 들어온 정보dependency  End -->
+
+4. MemberVO 생성
+
+5. application.properties = context.xml + context.xml 느낌
+# db connection(oracle) - connection pool info(context.xml)
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=scott
+spring.datasource.password=tiger
+
+# db connection(mysql)
+# spring.datasource.driver-class-name=com.mysql.jdbc.driver
+# spring.datasource.url=jdbc:mysql://@localhost:3306:web
+# spring.datasource.username=scott
+# spring.datasource.password=tiger
+
+# http port number(default : 8080)
+server.port=8082
+
+# thymeleaf auto refresh()
+spring.thymeleaf.cache=false
+
+6. Controller, Service, DAO, Mapper 작성
+
+7. 타임리프 템플릿으로 View 작성
+src/main/resources/ => 리소스 파일들이 들어간다.
+
+static : js, css, 이미지(기존의 resources 폴더)
+templates : 템플릿이 들어간다.(기존의 views 폴더.. 확장자는 html)
+ 
