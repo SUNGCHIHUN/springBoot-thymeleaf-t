@@ -15,7 +15,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 @SpringBootApplication
 // mapper 자동 스캔 -> DataSource 설정을 자동으로 해준다. 
 // 반드시 패키지를 먼저 만들고, 아래처럼 추가해야 자동으로 설정을 해준다.
-// dataSource-config.xml 파일과 동일
+// dataSource-config.xml 파일과 동일.
 @MapperScan("com.springboot.ex02.dao")
 public class SpringBootThymeleafTApplication {
 
